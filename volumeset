@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+#volumeset 
+amixer sset "Master" unmute 65% 
+amixer -c 1 -- sset "Master" unmute 65% 
+amixer -c 1 -- sset "Headphone Mic" 100% unmute 
+amixer -c 1 -- sset "Headphone Mic Boost" 100% unmute 
+amixer -c 1 -- sset "Headset Mic" 100% unmute 
+amixer -c 1 -- sset "Headset Mic Boost" 100% unmute 
+amixer -c 1 -- sset "Capture" 100% unmute 
+amixer -c 1 -- sset "Headphone Mic Boost" 100% unmute 
+amixer -c 1 -- sset "Headphone Mic" 100% unmute 
+amixer -c 1 -- sset "Headphone" 100% unmute
+amixer -c 1 -- sset "Speaker" 0%
+exit
