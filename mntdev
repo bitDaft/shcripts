@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+#mntdev
+
+mntpoint=""
+devices=""
+
+getmountpoint(){
+	excludedirs=$(lsblk -o mountpoint | grep "^/mnt" | awk '{printf "-not -path %s ",$1}')
+	dirs=$(find /mnt -mindepth 1 -maxdepth 1 -depth -type d $excludedirs 2>/dev/null)
+	mntpoint=$(echo "$dirs" | dmenu -l -i -p "Select mount point")
+	[ "$mntpoint" = "" ] && exit 0
+	if echo "$mntpoint" | grep -P "^[a-zA-Z0-9]+$" ; then 
+		mntpoint=$(echo "/mnt/$mntpoint")
+	fi
+	echo "$mntpoint" | grep -P "^/mnt/[a-zA-Z0-9]+/?$" 1>dev/null || exit 1
+	[ -d "$mntpoint" ] || sudo -A mkdir "$mntpoint"
+}
+
+mountusb(){
+	drive=$(echo "$devices" | dmenu -i -p "Choose drive" -l 10 | awk '{print $1}')
+	[ "$drive" = "" ] && exit 0
+	if ! sudo mount "$drive" ; then
+		getmountpoint
+		[ "$mntpoint" = "" ] && exit 0
+		sudo mount "$drive" "$mntpoint"
+	fi
+	
+}
+
+devices=$(lsblk -o NAME,SIZE,TYPE,MOUNTPOINT -nrp | awk '$3=="part"&&$4==""{printf "%s (%s)\n",$1,$2}')
+if [ -z "$devices" ]; then
+	echo "No USB devices detected" && exit 0
+else
+	mountusb
+fi
+
+
