@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+#wscan
+
+output=$(sudo iwlist wlp6s0 scan)
+if [ "$output" = "" ]; then
+	# wdown > /dev/null
+	sleep 2
+	exec wscan
+	exit 1
+else
+	echo "$output" | grep -Pio "(?<=ESSID\:\")\K.+(?=\")"
+	exit 0
+fi

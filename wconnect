@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+#wconnect
+net=$(wscan | dmenu -l 20)
+[ "$net" = "" ] && exit 0
+[ "$net" = "!" ] && exec wconnect
+if sudo iwgetid -r > /dev/null; then
+	c=$(sudo iwgetid -r)
+	[ "$c" = "$net" ] && exit 0
+fi
+found=0
+passwordfile="$HOME/shcripts/wpass.conf"
+if grep "$net" "$passwordfile"; then
+	pass=$(grep "$net" "$passwordfile" | grep -Po "(?<=\=\")\K.*(?=\"$)" )
+	found=1
+else
+	pass=$(echo 'Choose another network?\nQuit' | dmenu -p "Enter password")
+	[ "$pass" = "Choose another network\?" ] && exec wconnect
+	[ "$pass" = "Quit" ] && exit 0
+fi
+wdown
+sleep 2
+wpa_passphrase "$net" "$pass" | sudo tee /etc/wpa_supplicant.conf
+if wup n ; then
+	[ "$found" = "1" ] || echo "$net=\"$pass\"" | sudo tee -a "$passwordfile"
+	exit 0
+elif echo "(Y)es\n(N)o" | dmenu -p "Failed to Connect. Retry?" | grep -Pi "^(n|\(n)"; then
+	exit 1
+else
+	exec wconnect
+fi
