@@ -1,2 +1,1 @@
-
-tausif ALL=(ALL) NOPASSWD: /usr/sbin/wpa_supplicant, /usr/sbin/dhclient, /usr/sbin/iwlist, /usr/bin/tee, /usr/bin/killall
+tausif ALL=(ALL) NOPASSWD: /usr/sbin/wpa_supplicant, /usr/sbin/dhclient, /usr/sbin/iwlist, /usr/bin/tee, /usr/bin/killall, /usr/bin/ip, /usr/sbin/iwgetid, /usr/bin/mount, /usr/bin/umount
