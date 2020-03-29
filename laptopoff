@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+#laptopscreenoff
+xrandr --output eDP-1 --off --output HDMI-1 --auto
