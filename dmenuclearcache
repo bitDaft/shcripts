@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+#dmenuclearcache
+if [ -f "$HOME/.cache/dmenu_run" ]; then
+	rm $HOME/.cache/dmenu_run
+fi
