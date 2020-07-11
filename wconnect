@@ -8,7 +8,7 @@ if sudo iwgetid -r > /dev/null; then
 	[ "$c" = "$net" ] && exit 0
 fi
 found=0
-passwordfile="$HOME/shcripts/wpass.conf"
+passwordfile="$HOME/repos/shcripts/wpass.conf"
 if grep "$net" "$passwordfile"; then
 	pass=$(grep "$net" "$passwordfile" | grep -Po "(?<=\=\")\K.*(?=\"$)" )
 	found=1

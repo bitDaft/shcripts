@@ -5,6 +5,8 @@
 sudo killall wpa_supplicant
 echo "" | sudo tee /etc/wpa_supplicant.conf
 sudo dhclient -r wlp6s0
+#sudo ip link set wlp6s0 down
+#sudo ip link set wlp6s0 up
 #sudo wpa_supplicant -B -iwlp6s0 -c /etc/wpa_supplicant.conf
 sleep 1
 exit 0
