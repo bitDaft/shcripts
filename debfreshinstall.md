@@ -125,3 +125,4 @@ sudo apt install psmisc
 ```
 
 and now we can go ahead and restart the pc and see if all these worked.
+also remove the borders from windows with i3 config

@@ -12,7 +12,7 @@ getmountpoint(){
 	if echo "$mntpoint" | grep -P "^[a-zA-Z0-9]+$" ; then 
 		mntpoint=$(echo "/mnt/$mntpoint")
 	fi
-	echo "$mntpoint" | grep -P "^/mnt/[a-zA-Z0-9]+/?$" 1>dev/null || exit 1
+	echo "$mntpoint" | grep -P "^/mnt/[a-zA-Z0-9]+/?$" 1>/dev/null || exit 1
 	[ -d "$mntpoint" ] || sudo -A mkdir "$mntpoint"
 }
 
