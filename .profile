@@ -29,11 +29,12 @@ fi
 # custom profile additions
 
 # add my custom scripts file to path
-if [ -d "$HOME/shcripts" ]; then
-   PATH="$HOME/shcripts:$PATH"
+if [ -d "$HOME/repos/shcripts" ]; then
+   PATH="$HOME/repos/shcripts:$PATH"
 fi
 
 alias pls="sudo "
+alias nvd="__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "
 
 export EDITOR=/usr/bin/vim
 export SUDO_ASKPASS=$HOME/shcripts/askpass
