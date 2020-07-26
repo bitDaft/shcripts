@@ -1,3 +1,8 @@
 #!/usr/bin/env sh
 #laptopscreenoff
-xrandr --output eDP-1 --off --output HDMI-1 --auto
+displays=$(xrandr --current | grep -i connected | awk '{print $1}')
+if echo $displays | grep -i HDMI -q  ; then
+  input=$(echo $displays | awk '{print $1}')
+  output=$(echo $displays | awk '{print $2}')
+  xrandr --output $input --off --output $output --auto
+fi
