@@ -5,7 +5,7 @@ if xrandr | grep HDMI -q ;then
         laptopoff
 fi
 ~/.fehbg &
-dmenuclearcache &
+# dmenuclearcache &
 volumeset &
 wup &
 exec i3
