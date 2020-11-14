@@ -3,8 +3,8 @@
 net=$(wscan | dmenu -l 20)
 [ "$net" = "" ] && exit 0
 [ "$net" = "!" ] && exec wconnect
-if sudo iwgetid -r wlp6s0 -c> /dev/null; then
-	c=$(sudo iwgetid -r wlp6s0)
+if sudo iwgetid -r wlp8s0 -c> /dev/null; then
+	c=$(sudo iwgetid -r wlp8s0)
 	[ "$c" = "$net" ] && exit 0
 fi
 found=0

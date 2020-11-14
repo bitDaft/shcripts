@@ -13,7 +13,10 @@ getmountpoint(){
 		mntpoint=$(echo "/mnt/$mntpoint")
 	fi
 	echo "$mntpoint" | grep -P "^/mnt/[a-zA-Z0-9]+/?$" 1>/dev/null || exit 1
-	[ -d "$mntpoint" ] || sudo -A mkdir "$mntpoint"
+	if [ ! -d "$mntpoint" ]; then
+		echo "something is happening"
+	       	sudo -A mkdir "$mntpoint"
+	fi
 }
 
 mountusb(){

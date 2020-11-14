@@ -34,10 +34,9 @@ if [ -d "$HOME/repos/shcripts" ]; then
 fi
 
 alias pls="sudo "
-alias nvd="__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "
 
 export EDITOR=/usr/bin/vim
-export SUDO_ASKPASS=$HOME/shcripts/askpass
+export SUDO_ASKPASS=$HOME/repos/shcripts/askpass
 
 pgrep i3 || startx
 

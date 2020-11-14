@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #wscan
 
-output=$(sudo iwlist wlp6s0 scan)
+output=$(sudo iwlist wlp8s0 scan)
 if [ "$output" = "" ]; then
 	# wdown > /dev/null
 	sleep 2

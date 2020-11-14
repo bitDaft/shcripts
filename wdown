@@ -2,9 +2,10 @@
 #wdown
 
 #sudo ip -6 addr flush dev wlp6s0
-sudo dhclient -r -6 wlp6s0
-sudo dhclient -r wlp6s0
-sudo killall wpa_supplicant
+sudo dhclient -r -6 wlp8s0
+sudo dhclient -r wlp8s0
+#sudo killall wpa_supplicant
+sudo pkill wpa_supplicant
 echo "" | sudo tee /etc/wpa_supplicant.conf
 #sudo ip link set wlp6s0 down
 #sudo ip link set wlp6s0 up

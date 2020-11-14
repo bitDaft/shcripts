@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 #wup
-sudo ip link set wlp6s0 up
-sudo iwgetid -r wlp6s0 -c >/dev/null && exec wconnect
+sudo ip link set wlp8s0 up
+sudo iwgetid -r wlp8s0 -c >/dev/null && exec wconnect
 count=$(wc -l /etc/wpa_supplicant.conf | awk '{print $1}')
-[ "$count" -eq 5 ] && sudo wpa_supplicant -B -iwlp6s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext && sleep 15 
-if [ "$count" -eq 5 ] && sudo iwgetid -r wlp6s0 -c; then
-	sudo dhclient -nw wlp6s0
+[ "$count" -eq 5 ] && sudo wpa_supplicant -B -iwlp8s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext && sleep 15 
+if [ "$count" -eq 5 ] && sudo iwgetid -r wlp8s0 -c; then
+	sudo dhclient -nw wlp8s0
 	exit 0
 elif [ ! "$1" = "n" ]; then
 	exec wconnect
