@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+
+### THIS SCRIPT IS NOW DEPRECTED IN LIGHT OF NEW SYSTEM
+
 #laptopscreenoff
 displays=$(xrandr --current | grep -i connected | awk '{print $1}')
 if echo $displays | grep -i HDMI -q  ; then
