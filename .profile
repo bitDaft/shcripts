@@ -39,4 +39,3 @@ export EDITOR=/usr/bin/vim
 export SUDO_ASKPASS=$HOME/repos/shcripts/askpass
 
 pgrep i3 || startx
-
