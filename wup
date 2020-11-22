@@ -3,7 +3,7 @@
 sudo ip link set wlp8s0 up
 sudo iwgetid -r wlp8s0 -c >/dev/null && exec wconnect
 count=$(wc -l /etc/wpa_supplicant.conf | awk '{print $1}')
-[ "$count" -eq 5 ] && sudo wpa_supplicant -B -iwlp8s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext && sleep 5 
+[ "$count" -eq 5 ] && sudo wpa_supplicant -B -iwlp8s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext && sleep 7 
 if [ "$count" -eq 5 ] && sudo iwgetid -r wlp8s0 -c; then
 	sudo dhclient -nw wlp8s0
 	exit 0
