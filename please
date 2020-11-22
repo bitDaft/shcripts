@@ -2,8 +2,8 @@
 
 pls(){
 	if [ $# -eq 0 ]; then
-		sudo "$(fc -ln -1)"
+		sudo $(fc -ln -1)
 	else
-		sudo "$@"
+		sudo $@
 	fi
 }
