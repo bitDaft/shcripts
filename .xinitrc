@@ -11,11 +11,11 @@ fi
 #dbus-update-activation-environment --systemd DISPLAY
 
 #exec gnome-keyring &
-#exec intel-virtual-output &
-
+exec intel-virtual-output &
+[ -f ~/.Xresources ] && xrdb -merge -I"$HOME" ~/.Xresources
 ~/.fehbg &
 # dmenuclearcache &
 volumeset &
 wup &
-#exec external_display_activate &
+external_display_activate &
 exec i3
