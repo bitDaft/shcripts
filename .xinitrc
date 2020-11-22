@@ -6,12 +6,12 @@
 if xrandr | grep HDMI -q ;then
         laptopoff
 fi
-eval $(/usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
-export $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)
-dbus-update-activation-environment --systemd DISPLAY
+#eval $(/usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+#export $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)
+#dbus-update-activation-environment --systemd DISPLAY
 
-exec gnome-keyring &
-exec intel-virtual-output &
+#exec gnome-keyring &
+#exec intel-virtual-output &
 
 ~/.fehbg &
 # dmenuclearcache &
