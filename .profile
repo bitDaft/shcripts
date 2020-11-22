@@ -33,7 +33,7 @@ if [ -d "$HOME/repos/shcripts" ]; then
    PATH="$HOME/repos/shcripts:$PATH"
 fi
 
-alias pls="sudo "
+#alias pls="sudo "
 
 export EDITOR=/usr/bin/vim
 export SUDO_ASKPASS=$HOME/repos/shcripts/askpass

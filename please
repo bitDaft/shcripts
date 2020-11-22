@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+pls(){
+	if [ $# -eq 0 ]; then
+		sudo "$(fc -ln -1)"
+	else
+		sudo "$@"
+	fi
+}
