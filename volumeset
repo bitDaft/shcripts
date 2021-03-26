@@ -1,14 +1,18 @@
 #!/usr/bin/env sh
 #volumeset 
+
 amixer sset "Master" unmute 65% 
-amixer -c 1 -- sset "Master" unmute 65% 
-amixer -c 1 -- sset "Speaker" unmute 100% 
-amixer -c 1 -- sset "Headphone Mic" 100% unmute 
-amixer -c 1 -- sset "Headphone Mic Boost" 100% unmute 
-amixer -c 1 -- sset "Headset Mic" 100% unmute 
-amixer -c 1 -- sset "Headset Mic Boost" 100% unmute 
-amixer -c 1 -- sset "Capture" 100% unmute 
-amixer -c 1 -- sset "Headphone Mic Boost" 100% unmute 
-amixer -c 1 -- sset "Headphone Mic" 100% unmute 
-amixer -c 1 -- sset "Headphone" 100% unmute
+for i in $(aplay --list-devices | grep -Po "card \K\d"); do
+    amixer -c $i -- sset "Master" unmute 65% 
+    amixer -c $i -- sset "Speaker" unmute 100% 
+    amixer -c $i -- sset "Headphone Mic" 100% unmute 
+    amixer -c $i -- sset "Headphone Mic Boost" 100% unmute 
+    amixer -c $i -- sset "Headset Mic" 100% unmute 
+    amixer -c $i -- sset "Headset Mic Boost" 100% unmute 
+    amixer -c $i -- sset "Capture" 100% unmute 
+    amixer -c $i -- sset "Headphone Mic Boost" 100% unmute 
+    amixer -c $i -- sset "Headphone Mic" 100% unmute 
+    amixer -c $i -- sset "Headphone" 100% unmute
+done
+
 exit
