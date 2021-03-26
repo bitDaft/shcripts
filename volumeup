@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
-playback_input=`pactl list sink-inputs short | awk '{print $1}' | head -1`
-pactl set-sink-input-volume $playback_input +2%
+# playback_input=`pactl list sink-inputs short | awk '{print $1}' | head -1`
+# pactl set-sink-input-volume 0 +2%
+# pactl set-sink-input-volume $playback_input +2%
 # pactl set-sink-volume 1 +2%
+
+amixer sset "Master" unmute 2%+ 
