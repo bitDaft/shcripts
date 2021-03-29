@@ -7,3 +7,4 @@ pls(){
 		sudo $@
 	fi
 }
+compdef $_comps[sudo] pls
