@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+#opsh
+host=$(grep 'Host \w' ~/.ssh/config  | awk '{printf "%s\n", $2 }' | dmenu -l 10 -p "choose server")
+[ "$host" = "" ] && exit 0
+ssh $host
