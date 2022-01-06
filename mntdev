@@ -6,7 +6,7 @@ devices=""
 
 getmountpoint(){
 	excludedirs=$(lsblk -o mountpoint | grep "^/mnt" | awk '{printf "-not -path %s ",$1}')
-	dirs=$(find /mnt -mindepth 1 -maxdepth 1 -depth -type d $excludedirs 2>/dev/null)
+	dirs=$(find /mnt -mindepth 1 -maxdepth 1 -depth -type d $excludedirs | cut -d"/" -f3 2>/dev/null)
 	mntpoint=$(echo "$dirs" | dmenu -l -i -p "Select mount point")
 	[ "$mntpoint" = "" ] && exit 0
 	if echo "$mntpoint" | grep -P "^[a-zA-Z0-9]+$" ; then 

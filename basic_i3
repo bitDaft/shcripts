@@ -1,0 +1,5 @@
+#!/bin/sh
+intel-virtual-output
+xrandr --output VIRTUAL2 --off --output VIRTUAL1 --auto --pos 1900x0 --rotate normal --output eDP1 --primary --auto --pos 0x0 --rotate normal
+sleep 1
+xrandr --output VIRTUAL2 --off --output VIRTUAL1 --auto --pos 1920x0 --rotate normal --output eDP1 --primary --auto --pos 0x0 --rotate normal
