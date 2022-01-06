@@ -23,7 +23,7 @@ wpa_passphrase "$net" "$pass" | sudo tee /etc/wpa_supplicant.conf
 if wup n ; then
 	[ "$found" = "1" ] || echo "$net=\"$pass\"" | sudo tee -a "$passwordfile"
 	exit 0
-elif echo "(Y)es\n(N)o" | dmenu -p "Failed to Connect. Retry?" | grep -Pi "^(n|\(n)"; then
+elif echo "(y)es\(n)o" | dmenu -p "Failed to Connect. Retry?" | grep -Pi "^(n|\(n)"; then
 	exit 1
 else
 	exec wconnect

@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+#please 
 
 pls(){
 	if [ $# -eq 0 ]; then
