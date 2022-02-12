@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 #opsh
-host=$(grep 'Host \w' ~/.ssh/config  | awk '{printf "%s\n", $2 }' | dmenu -l 10 -p "choose server")
-[ "$host" = "" ] && exit 0
-x-terminal-emulator -e ssh $host
+hostline=$(grep 'Host \w' ~/.ssh/config  | cut -c6- | dmenu -l 10 -p "choose server")
+real_host=$(echo "$hostline" | awk '{printf "%s\n", $1 }')
+[ "$real_host" = "" ] && exit 0
+echo "$real_host"
+x-terminal-emulator -e ssh $real_host
