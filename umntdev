@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 #umntdev
 
-device=$(lsblk -o SIZE,MOUNTPOINT | grep -P "/mnt/" | awk '{printf "%s (%s)",$2,$1}')
+device=$(lsblk -o SIZE,MOUNTPOINT | grep -P "/mnt/" | awk '{printf "%s (%s)\n",$2,$1}')
 [ "$device" = "" ] && exit 0
-drive=$(echo $device | dmenu -i -p "Choose drive" -l 10 | awk '{print $1}')
+drive=$(echo "$device" | dmenu -i -p "Choose drive" -l 10 | awk '{print $1}')
 [ "$drive" = "" ] && exit 0
 sudo umount "$drive"
