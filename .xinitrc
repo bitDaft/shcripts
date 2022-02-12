@@ -18,4 +18,5 @@
 volumeset &
 wup &
 basic_i3 &
+dunst &
 exec i3
