@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+MONITOR="VIRTUAL1"
+PAD_NAME="HUION Huion Tablet_H1162 Pad pad"
+STYLUS_NAME="HUION Huion Tablet_H1162 stylus"
+
+ID_STYLUS=$(xinput | grep "stylus" | cut -f 2 | cut -c 4-5)
+
+xinput map-to-output $ID_STYLUS $MONITOR
+
+xsetwacom --set "$PAD_NAME" Button 1 "key +ctrl z -ctrl"
+xsetwacom --set "$PAD_NAME" Button 2 "key e"
+xsetwacom --set "$PAD_NAME" Button 3 "key b"
+xsetwacom --set "$PAD_NAME" Button 8 "key +"
+xsetwacom --set "$PAD_NAME" Button 9 "key -"
+xsetwacom --set "$PAD_NAME" Button 10 "key ]"
+xsetwacom --set "$PAD_NAME" Button 11 "key ["
+xsetwacom --set "$PAD_NAME" Button 12 "key p"
+xsetwacom --set "$STYLUS_NAME" Button 2 "Button 1"
+xsetwacom --set "$STYLUS_NAME" Button 3 "key +ctrl z -ctrl"
