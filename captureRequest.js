@@ -15,6 +15,7 @@ const main = async () => {
   await page.setRequestInterception(true);
 
   let finalUrl = "";
+  let title = "";
 
   page.on("request", (request) => {
     if (finalUrl) return;
@@ -40,6 +41,13 @@ const main = async () => {
           response_body,
         });
 
+        if (!title && ~response_body.indexOf("<title>")) {
+          let startIdx = response_body.indexOf("<title>");
+          let endIdx = response_body.indexOf(" - YouTube</title>");
+          title = response_body.slice(startIdx + 7, endIdx);
+          title = title.replace(/\//ig, '');
+          console.log(title);
+        }
         if (
           ~request_url.indexOf("googlevideo.com/videoplayback") &&
           ~request_url.indexOf("mime=audio") &&
@@ -47,10 +55,10 @@ const main = async () => {
         ) {
           // console.log(request_url);
           let t = new URL(request_url);
-          t.searchParams.delete("range")
+          t.searchParams.delete("range");
           finalUrl = t.toString();
           console.log(finalUrl);
-          process.exit(0)
+          process.exit(0);
         }
         request.continue();
       })

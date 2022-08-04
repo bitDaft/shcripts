@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+
+
+videoUrl="$1"
+outputFile=""
+outputDir="/mnt/ssde/music"
+outputFile=""
+
+
+createDirectory() {
+  echo "created"
+  mkdir -p "$outputDir"
+}
+
+if [ ! -d "$outputDir" ]; then
+  outputDir="/home/$USER/Downloads/music"
+  if [ ! -d "$outputDir" ]; then
+    createDirectory
+  fi
+fi
+
+getUserInputs() {
+  outputFile=$(echo "\n" | dmenu -i -p "Enter file name")
+}
+
+validateInputs() {
+  [ "$videoUrl" = "" ] && exit 1
+  # [ "$outputFile" = "" ] && exit 1
+}
+
+# getUserInputs
+validateInputs
+
+# we gonna do it hacky and get it done by  
+tt=$(node /home/$USER/repos/shcripts/captureRequest.js "$videoUrl")
+title=$(echo "$tt" | sed '1p;d')
+finalUrl=$(echo "$tt" | sed '2p;d')
+echo "$finalUrl" 
+echo "$title" 
+ffmpeg -i $finalUrl "$outputDir/$title.mp3"
