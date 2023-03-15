@@ -45,7 +45,7 @@ const main = async () => {
           let startIdx = response_body.indexOf("<title>");
           let endIdx = response_body.indexOf(" - YouTube</title>");
           title = response_body.slice(startIdx + 7, endIdx);
-          title = title.replace(/\//ig, '');
+          title = title.replace(/[\/\-\(\)]/ig, '');
           console.log(title);
         }
         if (
