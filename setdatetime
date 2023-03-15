@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+#settz
+
+now=$(date --rfc-3339=seconds | cut -c-19)
+selected_datetime=$(echo "auto\n${now}" | dmenu -i -p "Set Date/Time(YYYY-MM-DD HH:mm:ss)")
+[ "$selected_datetime" = "" ] && exit 0
+
+if echo "$selected_datetime" | grep -P "^auto$" ; then 
+  sudo timedatectl set-ntp true
+else
+  sudo timedatectl set-ntp false && sudo timedatectl set-time "$selected_datetime"
+fi
+
+exit

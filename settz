@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+#settz
+
+selected_timezone=$(timedatectl list-timezones | dmenu -i -l 20 -p "Select Timezone")
+
+sudo timedatectl set-timezone $selected_timezone
+
+exit
