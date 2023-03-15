@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-### THIS SCRIPT IS NOW DEPRECATED IS LIGHT OF NEW SYSTEM
+### THIS SCRIPT IS NOW DEPRECATED IN LIGHT OF NEW SYSTEM
 
 #laptopscreenon
 # xrandr --output eDP-1-1 --auto --output HDMI-1-1 --off
