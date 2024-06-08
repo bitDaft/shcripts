@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+#btconnect
+
+if [ "$1" = "" ]; then
+  echo "No device id given to connect"
+  exit 1
+fi
+
+bluetoothctl connect "$1"

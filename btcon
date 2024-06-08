@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+#btcon
+
+option=""
+
+if [ ! "$1" = "" ]; then
+  option="$1"
+fi
+
+if [ "$option" = "scan" ]; then
+  scanList=$(btscan)
+  option=$(echo "rescan\n${deviceList}" | dmenu -i -p "connect to device" -l 20)
+  if [ "$option" = "" ]; then
+    exit 0
+  fi
+  if [ "$option" = "rescan" ]; then
+    btcon "scan"
+  else
+    btpair "$option"
+  fi
+  exit 0
+elif [ ! "$option" = "" ]; then
+  btconnect "$option"
+  exit 0
+fi
+
+deviceList=$(btlist)
+option=$(echo "scan\n$deviceList" | dmenu -i -p "connect to device" -l 20 | cut -d" " -f2)
+
+if [ "$option" = "" ]; then
+  exit 0
+fi
+
+btcon "$option"
+exit 0
+

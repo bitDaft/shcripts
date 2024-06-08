@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+#btscan
+
+scanResult=$(bluetoothctl --timeout 10 scan on | grep -i "device")
+bluetoothctl scan off
+
+echo "$scanResult"

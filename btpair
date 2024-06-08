@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+#btpair
+
+if [ "$1" = "" ]; then
+  echo "No device id given to pair"
+  exit 1
+fi
+
+bluetoothctl pair $1
+bluetoothctl trust $1
+bluetoothctl connect $1
+bluetoothctl trust $1

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+#mousergbcron
+
+openrgb -d 0 -b 60 -m direct -c FFFFFF

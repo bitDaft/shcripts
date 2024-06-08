@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+#btlist
+
+deviceList=$(bluetoothctl devices)
+echo "$deviceList"
