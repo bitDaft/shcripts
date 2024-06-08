@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+#torauth
+
+dir=$(dirname -- "$0")
+sidfile=$(echo "$dir/_torrentor/cookie")
+
+username="admin"
+password="password"
+
+response=$(curl -i \
+        --header 'Referer: http://localhost:8804/upload.html' \
+        --header 'Host: http://localhost:8804' \
+        --header 'Origin: http://localhost:8804' \
+        --header 'Upgrade-Insecure-Requests: 1' \
+        --header 'Content-Type: application/x-www-form-urlencoded' \
+        --data "username=${username}&password=${password}"  \
+        http://localhost:8804/api/v2/auth/login)
+
+echo "$response"
+
+sid=$(echo "$response" | grep -iPo 'SID=\K.*$')
+echo $sid | tee $sidfile
+exit 0
+
+

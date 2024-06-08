@@ -1,0 +1,48 @@
+#!/usr/bin/env sh
+#toradd
+
+link=$(echo "$1")
+
+if [ "$link" = "" ]; then
+  link=$(torsearch)
+fi
+
+dir=$(dirname -- "$0")
+sidfile=$(echo "$dir/_torrentor/cookie")
+
+addedTor=""
+
+makerequest(){
+sid=$(cat $sidfile)
+addedTor=$(curl -i -v --request POST \
+      --url http://localhost:8804/api/v2/torrents/add \
+      --header 'Referer: http://localhost:8804/upload.html' \
+      --header 'Host: http://localhost:8804' \
+      --header 'Origin: http://localhost:8804' \
+      --header 'Upgrade-Insecure-Requests: 1' \
+      --header 'Content-Type: multipart/form-data' \
+      --header "SID: $sid" \
+      --cookie "SID=$sid" \
+      --form "urls=$link" \
+      --form autoTMM=false \
+      --form paused=false \
+      --form tags=torrentor \
+      --form ratioLimit=1 \
+      --form seedingTimeLimit=1 \
+      --form firstLastPiecePrio=true)
+}
+makerequest
+
+if echo "$addedTor" | grep -iPo "(fails|403)"; then
+  echo "Failed. Trying again"
+  torauth
+  makerequest
+fi
+
+if echo "$addedTor" | grep -iPo "fails"; then
+  echo "Failed again. Aborting"
+  echo "$addedTor"
+  exit 1
+fi
+
+exit 0

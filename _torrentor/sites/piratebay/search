@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+#search
+
+cat="$2"
+if [ "$cat" = "" ]; then
+  cat="0"
+fi
+
+turl="$3"
+if [ "$turl" = "" ]; then
+  echo "No site url provided"
+  exit 1
+fi
+listData=$(
+  curl --get \
+  --data-urlencode "q=$1" \
+  --data-urlencode "cat=$cat" \
+  --url "${turl}api.php?url=/q.php" 
+)
+
+lines=$(echo "$listData" | grep -oP '"id":.*?"(?=},{)')
+formattedLinesNames=$(echo "$lines" | grep -oP '"name":"\K.*?(?=",")')
+formattedLinesSizes=$(echo "$lines" | grep -oP '"size":"\K.*?(?=",")' | numfmt --to=iec-i)
+formattedLinesSeeds=$(echo "$lines" | grep -oP '"seeders":"\K.*?(?=",")')
+formattedLinesHashes=$(echo "$lines" | grep -oP '"info_hash":"\K.*?(?=",")')
+
+echo "$formattedLinesNames"   | sed -r "s/\*/\./g" | tee /tmp/_fNames > /dev/null
+echo "$formattedLinesSizes"   | sed -r "s/\*/\./g" | tee /tmp/_fSizes > /dev/null
+echo "$formattedLinesSeeds"   | sed -r "s/\*/\./g" | tee /tmp/_fSeeds > /dev/null
+echo "$formattedLinesHashes"  | sed -r "s/\*/\./g" | tee /tmp/_fHashes > /dev/null
+
+outputLines=$(paste -d $"*" /tmp/_fSeeds /tmp/_fSizes /tmp/_fNames /tmp/_fHashes | column -s $"*" -t | grep -v "^0* ")
+echo "$outputLines" | tee /tmp/_fFormatted > /dev/null
+echo "$outputLines"
