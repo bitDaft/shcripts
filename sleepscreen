@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+#sleepscreen
+
+option="$1"
+
+if [ "$option" = "" ]; then
+  option=$(echo "no\nyes(15min interval/ type in the number of seconds manually of needed)" | dmenu -i -p "sleep displays?")
+fi
+
+if [ "$option" = "no" ]; then
+  xset dpms 0 0 0 
+  DISPLAY=:8 xset dpms 0 0 0 
+else
+  if echo "$option" | grep -iPo "^\d+$"; then
+    xset dpms "$option" "$option" "$option" 
+    DISPLAY=:8 xset dpms "$option" "$option" "$option" 
+  else
+    xset dpms 900 900 900 
+    DISPLAY=:8 xset dpms 900 900 900 
+  fi
+fi
+
+

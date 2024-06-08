@@ -19,4 +19,5 @@ volumeset &
 wup &
 basic_i3 &
 dunst &
+sleepscreen "no" &
 exec i3
