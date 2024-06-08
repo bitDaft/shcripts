@@ -6,14 +6,19 @@ if [ "$count" = "" ]; then
   count=0
 fi
 
+
 dev="$1"
 if [ ! "$dev" = "" ]; then
   if [ "$count" = "5" ]; then
     echo "failed to reconnect"
     exit 1
   fi
+  delay=$3
+  if [ "$delay" = "" ]; then
+    delay=3
+  fi
   btdiscon
-  sleep 3
+  sleep $delay
   btconnect "$dev"
   if [ "$?" = "1" ]; then
     count=$((count+1))
@@ -22,7 +27,7 @@ if [ ! "$dev" = "" ]; then
     exit 0
   fi
 else
-  currentDevice=$(bluetoothctl info | grep -i "device" | cut -d" " -f2)
+  currentDevice=$(bluetoothctl info | grep -P "^Device" | cut -d" " -f2)
   btrecon "$currentDevice" $count 
 fi
 
