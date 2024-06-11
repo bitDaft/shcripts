@@ -6,9 +6,11 @@ if [ "$1" = "" ]; then
   exit 1
 fi
 
-bluetoothctl connect "$1"
+check=$(bluetoothctl connect "$1")
 
-if [ "$?" = "0" ]; then
+if [ "$check" = "0" ]; then
   dir=$(dirname -- "$0")
   echo "$1" > "$dir/btlasthex" 
 fi
+
+echo "$check"

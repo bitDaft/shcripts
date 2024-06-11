@@ -19,8 +19,8 @@ if [ ! "$dev" = "" ]; then
   fi
   btdiscon
   sleep $delay
-  btconnect "$dev"
-  if [ "$?" = "1" ]; then
+  lastCheck=$(btconnect "$dev")
+  if [ "$lastCheck" = "1" ]; then
     count=$((count+1))
     btrecon "$currentDevice" $count 
   else
