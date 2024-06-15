@@ -15,15 +15,18 @@ if [ ! "$dev" = "" ]; then
   fi
   delay=$3
   if [ "$delay" = "" ]; then
-    delay=3
+    delay=1
   fi
   btdiscon
   sleep $delay
+  echo "trying to connect to : $1"
   lastCheck=$(btconnect "$dev")
+  echo "$lastCheck"
   if [ "$lastCheck" = "1" ]; then
     count=$((count+1))
     btrecon "$currentDevice" $count 
   else
+    echo "Successfully connected"
     exit 0
   fi
 else

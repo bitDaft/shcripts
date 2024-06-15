@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+#brotab
+
+dir=$(dirname -- "$0")
+
+currentTabId=$(cat "$dir/browserinfo/brotabid")
+tabGroups=$(ls -1 "$dir/browserinfo/tabs")
+
+tabList=$(echo "All\n${tabGRoups}" | dmenu -i -l 20 -p "select tab group")
+
+selectedTab=""
+if [ "$tabList" = "" ]; then
+  exit 0
+elif [ "$tabList" = "All" ]; then
+  selectedTab=$(cat "$dir/browserinfo/tabs/*" | dmenu -i -l 20 -p "select tab")
+else
+  selectedTab=$(cat "$dir/browserinfo/tabs/$tabList" | dmenu -i -l 20 -p "select tab")
+fi
+
+# close the existing tab
+xkill "$currentTabId"
+echo "" | tee "$dir/browserinfo/brotabid
+
+
+
+
+# open new tab
+broopen "$selectedTab"

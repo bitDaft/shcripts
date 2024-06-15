@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+#brourlopen
+
+dir=$(dirname -- "$0")
+
+url="$1"
+
+if [ "$url" = "" ]; then
+  echo "no url provided"
+  exit 1 
+fi
+
+browser=$(cat "$dir/browserinfo/brobin")
+
+$browser --app="$1"
+
+exit 0 

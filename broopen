@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+#broopen
+
+query="$@"
+
+if [ "$query" = "" ]; then
+  echo "no query provided"
+  exit 1 
+fi
+
+if echo "$query" | grep -iP "^(http|https):"; then
+  brourlopen "$query"
+else  
+  brourlopen "https://www.google.com/search?q=${query}&newwindow=1"
+fi
+
+exit 0
+

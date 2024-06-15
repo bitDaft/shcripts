@@ -6,7 +6,7 @@ if [ "$1" = "" ]; then
   exit 1
 fi
 
-bluetoothctl connect "$1"
+bluetoothctl connect "$1" > /dev/null 2>&1
 check=$(echo "$?")
 
 if [ "$check" = "0" ]; then
