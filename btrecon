@@ -6,24 +6,24 @@ if [ "$count" = "" ]; then
   count=0
 fi
 
-
-dev="$1"
-if [ ! "$dev" = "" ]; then
+currentDevice="$1"
+if [ ! "$currentDevice" = "" ]; then
   if [ "$count" = "5" ]; then
     echo "failed to reconnect"
     exit 1
   fi
-  delay=$3
+  delay="$3"
   if [ "$delay" = "" ]; then
-    delay=1
+    delay="1"
   fi
   btdiscon
-  sleep $delay
+  sleep "$delay"
   echo "trying to connect to : $1"
-  lastCheck=$(btconnect "$dev")
+  lastCheck=$(btconnect "$currentDevice")
   echo "$lastCheck"
   if [ "$lastCheck" = "1" ]; then
     count=$((count+1))
+    echo "retrying..."
     btrecon "$currentDevice" $count 
   else
     echo "Successfully connected"
