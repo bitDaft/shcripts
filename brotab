@@ -42,6 +42,7 @@ echo "$curNewTabLine"
 echo "$queryF"
 
 [ ! "$tabList" = "new" ] && [ "$queryF" = "" ] && exit 0
+[ "$tabList" = "new" ] && [ "$query" = "" ] && exit 0
 
 if [ ! "$currentOpenTabId" = "" ]; then
   # find the current url update it in the list

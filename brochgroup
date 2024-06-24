@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+#brochgroup
+
+dir=$(dirname -- "$0")
+
+tabGroups=$(ls -1 "$dir/browserinfo/tabs" | sort)
+
+tabList=""
+
+tabList=$(echo "${tabGroups}" | dmenu -i -l 20 -p "select new tab group")
+[ "$tabList" = "" ] && exit 0
+
+currentTabGroupName=$(cat "$dir/browserinfo/brocurrenttabgroup")
+currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
+currentTablineUrl=$(echo "$currentTabline" | grep -iPo "https?://.*?(?=}$)")
+
+delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
+sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$currentTabGroupName"
+
+touch "$dir/browserinfo/tabs/$tabList"
+
+echo "$currentTabline" >> "$dir/browserinfo/tabs/$tabList"
+echo "$tabList" | tee "$dir/browserinfo/brocurrenttabgroup"
+
+
+
+
