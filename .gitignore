@@ -1,3 +1,5 @@
 wpass.conf
 node_modules
 bgconfig
+browserinfo/bookmark
+browserinfo/tabs
