@@ -12,6 +12,6 @@ fi
 
 browser=$(cat "$dir/browserinfo/brobin")
 
-$browser --app="$1"
+$browser --app="$1" --enable-extensions --new-window &
 
 exit 0 
