@@ -5,4 +5,7 @@ new_brightness=$((current_brightness-2400))
 
 [ $new_brightness -lt 0  ] && new_brightness=0
 
+dir=$(dirname -- "$0")
+echo "$new_brightness" | tee "$dir/brightnesslast" > /dev/null
+
 echo $new_brightness | sudo tee /sys/class/backlight/intel_backlight/brightness

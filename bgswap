@@ -25,4 +25,5 @@ else
 fi
 
 
-feh --bg-scale "$filepath"
+DISPLAY=:0 feh --bg-scale "$filepath"
+DISPLAY=:8 feh --bg-scale "$filepath"
