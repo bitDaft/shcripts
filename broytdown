@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+#broytdown
+
+dir=$(dirname -- "$0")
+sessionPath="/home/tausif/custombro/custombro/Sessions"
+audioPath="/mnt/ssde/music/%(title)s-%(id)s.%(ext)s"
+videoPath="/mnt/ssde/videos/%(title)s-%(id)s.%(ext)s"
+
+broupdate
+
+av="$1"
+[ "$av" = "" ] && exit 1
+echo "av = $av"
+
+tabUrl=$(cat "$dir/browserinfo/brocurrenttabline" | grep -iPo "https?://.*?(?=}$)" )
+echo "url : $tabUrl"
+valid=$(echo "$tabUrl" | grep -i "watch")
+[ "$valid" = "" ] && exit 1
+
+
+if [ "$av" = "a" ]; then
+  echo came here
+  youtube-dl "$tabUrl" -x -o "$audioPath"
+elif [ "$av" = "v" ]; then
+  youtube-dl "$tabUrl" -o "$videoPath"
+else
+  exit 1
+fi
+exit 0

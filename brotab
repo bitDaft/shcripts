@@ -60,7 +60,7 @@ sleep 3
 currentTabLineX=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -v "\"brave-browser.*\"\ \"custom-bro\"")
 currentOpenTabName=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+\ \"\K.+?(?=\")")
 sessionFileName=$(ls -1 "$sessionPath" | grep -i "^Session_")
-currentTabUrl=$(chrome-session-dump "$sessionPath/$sessionFileName")
+currentTabUrl=$(chrome-session-dump "$sessionPath/$sessionFileName" | head -n 1)
 curNewTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
 
 if [ "$exists" = "0" ]; then
