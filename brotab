@@ -2,6 +2,7 @@
 #brotab
 
 dir=$(dirname -- "$0")
+sessionPath="/home/tausif/custombro/custombro/Sessions"
 
 tabGroups=$(ls -1 "$dir/browserinfo/tabs" | sort)
 
@@ -16,16 +17,6 @@ elif [ "$tabList" = "new" ]; then
   query=$(echo "" | dmenu -i -p "enter url or search")
 fi
 
-currentTabLineX=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -v "\"brave-browser\"\ \"Brave-browser\"")
-currentOpenTabId=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+")
-currentOpenTabName=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+\ \"\K.+?(?=\")")
-sessionFileName=$(ls -1 "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/" | grep -i "^App")
-currentTabUrl=""
-if [ ! "$sessionFileName" = "" ]; then
-  currentTabUrl=$(chrome-session-dump "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/$sessionFileName")
-fi
-curNewTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
-
 [ "$tabList" = "" ] && exit 0
 
 queryF=""
@@ -35,47 +26,23 @@ elif [ ! "$tabList" = "new" ]; then
   queryF=$(cat "$dir/browserinfo/tabs/$tabList" | dmenu -i -l 20 -p "select tab")
 fi
 
-echo "$currentOpenTabId"
-echo "$currentOpenTabName"
-echo "$sessionFileName"
-echo "$curNewTabLine"
-echo "$queryF"
-
 [ ! "$tabList" = "new" ] && [ "$queryF" = "" ] && exit 0
 [ "$tabList" = "new" ] && [ "$query" = "" ] && exit 0
 
+currentTabLineX=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -i "\"brave-browser.*\"\ \"custom-bro\"")
+currentOpenTabId=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+")
+
 if [ ! "$currentOpenTabId" = "" ]; then
-  # find the current url update it in the list
-  currentTabGroupName=$(cat "$dir/browserinfo/brocurrenttabgroup")
-  currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
-  currentTablineUrl=$(echo "$currentTabline" | grep -iPo "https?://.*?(?=}$)")
-
-  delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
-  fileLineCount=$(cat "$dir/browserinfo/tabs/$currentTabGroupName" | wc -l)
-
-  echo "$currentTabGroupName"
-  echo "$currentTabline"
-  echo "$delLineNumber"
-  echo "$fileLineCount"
-
-  if [ ! "$delLineNumber" = "" ]; then
-    sed -i "${delLineNumber}a ${curNewTabLine}\\" "$dir/browserinfo/tabs/$currentTabGroupName"
-    sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$currentTabGroupName"
-  elif [ $fileLineCount -eq 0 ]; then
-    echo "$curNewTabLine" > "$dir/browserinfo/tabs/$currentTabGroupName"
-  else
-    sed -i "1i ${curNewTabLine}\\" "$dir/browserinfo/tabs/$currentTabGroupName"
-  fi
-
+  broupdate
   echo "" | tee "$dir/browserinfo/brocurrenttabgroup"
   echo "" | tee "$dir/browserinfo/brocurrenttabline"
   # close the existing tab
-  DISPLAY=:0 xkill -id "$currentOpenTabId"
-  rm "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/$sessionFileName"
-else
-  rm -r "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions"
-  mkdir -p "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions"
+  DISPLAY=:0 wmctrl -ic "$currentOpenTabId"
+  sleep 1
 fi
+
+rm -r "$sessionPath"
+mkdir -p "$sessionPath"
 
 exists="1"
 if [ "$tabList" = "new" ]; then
@@ -84,16 +51,16 @@ if [ "$tabList" = "new" ]; then
 else 
   query=$(echo "$queryF" | grep -iPo "https?://.*?(?=}$)")
 fi
+
 echo "$tabList" | tee "$dir/browserinfo/brocurrenttabgroup"
-echo "-> $query"
 # open new tab
 broopen "$query"
 sleep 3
 
-currentTabLineX=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -v "\"brave-browser\"\ \"Brave-browser\"")
+currentTabLineX=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -v "\"brave-browser.*\"\ \"custom-bro\"")
 currentOpenTabName=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+\ \"\K.+?(?=\")")
-sessionFileName=$(ls -1 "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/" | grep -i "^App")
-currentTabUrl=$(chrome-session-dump "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/$sessionFileName")
+sessionFileName=$(ls -1 "$sessionPath" | grep -i "^Session_")
+currentTabUrl=$(chrome-session-dump "$sessionPath/$sessionFileName")
 curNewTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
 
 if [ "$exists" = "0" ]; then
@@ -107,6 +74,7 @@ if [ "$exists" = "0" ]; then
 else
   echo "$queryF" | tee "$dir/browserinfo/brocurrenttabline"
 fi
+broupdate
 
 
 

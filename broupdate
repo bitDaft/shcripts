@@ -2,9 +2,9 @@
 #broupdate
 
 dir=$(dirname -- "$0")
+sessionPath="/home/tausif/custombro/custombro/Sessions"
 
-currentTabLine=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -v "\"brave-browser\"\ \"Brave-browser\"")
-echo "->>>> $currentTabLine"
+currentTabLine=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -i "\"brave-browser.*\"\ \"custom-bro\"")
 if [ "$currentTabLine" = "" ]; then
   echo "exiting..."
   exit 0
@@ -12,23 +12,17 @@ fi
 echo "saving..."
 
 currentOpenTabName=$(echo "$currentTabLine" | grep -iPo "\b0x\w+\ \"\K.+?(?=\")")
-sessionFileName=$(ls -1 "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/" | grep -i "^App")
+sessionFileName=$(ls -1 "$sessionPath" | grep -i "^Session_")
 [ "$sessionFileName" = "" ] && exit 0
-currentTabUrl=$(chrome-session-dump "/home/tausif/.config/BraveSoftware/Brave-Browser/Default/Sessions/$sessionFileName")
+currentTabUrl=$(chrome-session-dump "$sessionPath/$sessionFileName" | head -n 1)
 newTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
 
 currentTabGroupName=$(cat "$dir/browserinfo/brocurrenttabgroup")
 currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
 currentTablineUrl=$(echo "$currentTabline" | grep -iPo "https?://.*?(?=}$)")
 
-echo "$currentTabGroupName"
-echo "$currentTabline"
-echo "$newTabLine"
-echo "$dir/browserinfo/tabs/$currentTabGroupName"
-
 delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
 fileLineCount=$(cat "$dir/browserinfo/tabs/$currentTabGroupName" | wc -l)
-echo "$delLineNumber"
 
 echo "$newTabLine" | tee "$dir/browserinfo/brocurrenttabline"
 if [ ! "$delLineNumber" = "" ]; then
@@ -40,7 +34,7 @@ else
   sed -i "1i ${newTabLine}\\" "$dir/browserinfo/tabs/$currentTabGroupName"
 fi
 
-files=$(sort -u "$dir/browserinfo/tabs/$currentTabGroupName")
+files=$(sort -u "$dir/browserinfo/tabs/$currentTabGroupName" | grep -v "^{}$")
 
 echo "$files" | tee "$dir/browserinfo/tabs/$currentTabGroupName"
 

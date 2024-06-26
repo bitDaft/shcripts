@@ -12,6 +12,6 @@ fi
 
 browser=$(cat "$dir/browserinfo/brobin")
 
-$browser --app="$1" --enable-extensions --new-window --app-id="indi_custom" &
+$browser --kiosk --enable-profile-shortcut-manager --enable-extensions --disable-restore-session-state --new-window --profile-directory="custombro" --user-data-dir="custombro" --class="custom-bro" "$1" &
 
 exit 0 

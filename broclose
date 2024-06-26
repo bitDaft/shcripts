@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+#broclose
+
+dir=$(dirname -- "$0")
+sessionPath="/home/tausif/custombro/custombro/Sessions"
+
+tabGroups=$(ls -1 "$dir/browserinfo/tabs" | sort)
+
+tabList="$1"
+query=""
+
+currentTabLineX=$(DISPLAY=:0 xwininfo -tree -root | grep -v "has no name" | grep -v child | grep -i brave-browser | grep -i "\"brave-browser.*\"\ \"custom-bro\"")
+currentOpenTabId=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+")
+
+if [ "$tabList" = "" ]; then
+  if [ ! "$currentOpenTabId" = "" ]; then
+    tabList=$(echo "!current\n${tabGroups}" | dmenu -i -l 20 -p "select tab group")
+  else
+    tabList=$(echo "${tabGroups}" | dmenu -i -l 20 -p "select tab group")
+  fi
+fi
+
+[ "$tabList" = "" ] && exit 0
+
+queryF=""
+if [ "$tabList" = "!current" ]; then
+  tabList=$(cat "$dir/browserinfo/brocurrenttabgroup")
+  queryF=$(cat "$dir/browserinfo/brocurrenttabline")
+else
+  list=$(cat "$dir/browserinfo/tabs/$tabList")
+  queryF=$(echo "back\n$list" | dmenu -i -l 20 -p "close tab")
+fi
+
+[ "$queryF" = "" ] && exit 0
+[ "$queryF" = "back" ] && broclose && exit 0
+
+if [ ! "$currentOpenTabId" = "" ]; then
+  currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
+
+  if [ "$queryF" = "$currentTabline" ]; then 
+    echo "" | tee "$dir/browserinfo/brocurrenttabline"
+    DISPLAY=:0 wmctrl -ic "$currentOpenTabId"
+    rm -r "$sessionPath"
+    mkdir -p "$sessionPath"
+  fi
+fi
+currentTablineUrl=$(echo "$queryF" | grep -iPo "https?://.*?(?=}$)")
+
+delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$tabList" | grep -ioP "^\d+(?=:)")
+if [ ! "$delLineNumber" = "" ]; then
+  sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$tabList"
+fi
+
+broclose "$tabList"
+
+
+
+

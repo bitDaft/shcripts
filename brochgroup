@@ -15,11 +15,15 @@ currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
 currentTablineUrl=$(echo "$currentTabline" | grep -iPo "https?://.*?(?=}$)")
 
 delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
-sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$currentTabGroupName"
+if [ ! "$delLineNumber" = "" ]; then
+  sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$currentTabGroupName"
+fi
 
 touch "$dir/browserinfo/tabs/$tabList"
 
 echo "$currentTabline" >> "$dir/browserinfo/tabs/$tabList"
+files=$(sort -u "$dir/browserinfo/tabs/$tabList" | grep -v "^{}$")
+echo "$files" | tee "$dir/browserinfo/tabs/$tabList"
 echo "$tabList" | tee "$dir/browserinfo/brocurrenttabgroup"
 
 
