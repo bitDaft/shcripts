@@ -49,7 +49,7 @@ if [ "$tabList" = "new" ]; then
   exists="0"
   tabList="_unsorted"
 else 
-  query=$(echo "$queryF" | grep -iPo "https?://.*?(?=}$)")
+  query=$(echo "$queryF" | grep -iPo "{\K.*?(?=}$)")
 fi
 
 echo "$tabList" | tee "$dir/browserinfo/brocurrenttabgroup"

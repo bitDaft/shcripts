@@ -44,7 +44,7 @@ if [ ! "$currentOpenTabId" = "" ]; then
     mkdir -p "$sessionPath"
   fi
 fi
-currentTablineUrl=$(echo "$queryF" | grep -iPo "https?://.*?(?=}$)")
+currentTablineUrl=$(echo "$queryF" | grep -iPo "{\K.*?(?=}$)")
 
 delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$tabList" | grep -ioP "^\d+(?=:)")
 if [ ! "$delLineNumber" = "" ]; then

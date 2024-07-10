@@ -19,7 +19,7 @@ newTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
 
 currentTabGroupName=$(cat "$dir/browserinfo/brocurrenttabgroup")
 currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
-currentTablineUrl=$(echo "$currentTabline" | grep -iPo "https?://.*?(?=}$)")
+currentTablineUrl=$(echo "$currentTabline" | grep -iPo "{\K.*?(?=}$)")
 
 delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
 fileLineCount=$(cat "$dir/browserinfo/tabs/$currentTabGroupName" | wc -l)

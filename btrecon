@@ -1,40 +1,23 @@
 #!/usr/bin/env sh
 #btrecon
 
-count=$2
-if [ "$count" = "" ]; then
-  count=0
-else
-  count=$((count+1))
-fi
+dir=$(dirname -- "$0")
+currentDevice=$(cat "$dir/btlasthex")
 
-if [ "$count" = "5" ]; then
-  echo "failed to reconnect"
-  exit 1
-fi
+[ "$currentDevice" = "" ] && exit 1
 
-currentDevice="$1"
-if [ ! "$currentDevice" = "" ]; then
-  delay="$3"
-  if [ "$delay" = "" ]; then
-    delay="1"
-  fi
-  btdiscon
-  sleep "$delay"
-  echo "trying to connect to : $1"
-  lastCheck=$(btconnect "$currentDevice")
-  echo "$lastCheck"
-  if [ "$lastCheck" = "1" ]; then
-    echo "retrying for $currentDevice $count..."
-    btrecon "$currentDevice" $count 
-  else
-    echo "Successfully connected"
-    exit 0
-  fi
-else
-  currentDevice=$(bluetoothctl info | grep -P "^Device" | cut -d" " -f2)
-  btrecon "$currentDevice" $count 
-fi
+count=$1
+[ "$count" = "" ] && count=0
+[ "$count" = "5" ] && echo "failed to reconnect" && exit 1
+count=$((count+1))
+
+echo "device: $currentDevice"
+btdiscon
+sleep 2
+echo "trying to connect to : $currentDevice"
+btconnect "$currentDevice" && echo "Successfully connected" && exit 0
+echo "retrying for $currentDevice $count..."
+btrecon $count 
 
 
 

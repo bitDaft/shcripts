@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-#btlrecon
-
-dir=$(dirname -- "$0")
-lastHex=$(cat "$dir/btlasthex")
-
-btrecon "$lastHex" 0 0 > /tmp/btlrecon
