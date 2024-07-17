@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+#sltoggle
+
+dir=$(dirname -- "$0")
+option=$(cat "$dir/sleepscreenlast")
+
+if [ "$option" = "0" ]; then
+  DISPLAY=:0 xset dpms 1 1 1  
+  DISPLAY=:8 xset dpms 1 1 1 
+  sleep 5
+  DISPLAY=:0 xset dpms 3 3 3 
+  DISPLAY=:8 xset dpms 3 3 3 
+  echo "3" | tee "$dir/sleepscreenlast"
+else
+  DISPLAY=:0 xset dpms 0 0 0 
+  DISPLAY=:8 xset dpms 0 0 0 
+  echo "0" | tee "$dir/sleepscreenlast"
+fi
+
+
