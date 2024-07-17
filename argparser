@@ -1,0 +1,95 @@
+#!/usr/bin/env sh
+#argparser
+# Function to store argument descriptions
+arg_descriptions=""
+
+# Function to parse arguments
+parse_args() {
+    non_opt_args=""
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -h|--help)
+                # Display usage information
+                display_usage
+                exit 0
+                ;;
+            -[!-]?*)
+                # Single or chained short options
+                opt="$1"
+                opt=${opt#-}
+                while [ -n "$opt" ]; do
+                    optchar=$(echo "$opt" | cut -c1)
+                    set_arg "$optchar" "true"
+                    opt=$(echo "$opt" | cut -c2-)
+                done
+                ;;
+            --?*=*)
+                # Long options with value
+                opt=$(echo "$1" | cut -d= -f1)
+                val=$(echo "$1" | cut -d= -f2-)
+                set_arg "${opt#--}" "$val"
+                ;;
+            --?*)
+                # Long options without value
+                opt="$1"
+                shift
+                if [ -n "$1" ] && [ "${1#-}" = "$1" ]; then
+                    set_arg "${opt#--}" "$1"
+                    shift
+                else
+                    set_arg "${opt#--}" "true"
+                fi
+                continue
+                ;;
+            *)
+                # Handle non-option arguments
+                non_opt_args="${non_opt_args} \"$1\""
+                ;;
+        esac
+        shift
+    done
+
+    # Restore non-option arguments as positional parameters
+    eval "set -- $non_opt_args"
+}
+
+# Function to set argument values
+set_arg() {
+    arg_name="$1"
+    arg_value="$2"
+
+    eval "arg_$arg_name=\"$arg_value\""
+}
+
+# Function to get argument values
+get_arg() {
+    arg_name="$1"
+    eval "echo \${arg_$arg_name}"
+}
+
+# Function to add argument descriptions
+add_arg_description() {
+    arg_name="$1"
+    arg_description="$2"
+    arg_descriptions="${arg_descriptions}\\n${arg_name}: ${arg_description}"
+}
+
+# Function to display usage information
+display_usage() {
+    echo "Usage: $0 [OPTIONS] [ARGUMENTS]"
+    echo "Options:"
+    echo "$arg_descriptions"
+}
+
+# Example of adding descriptions (commented out for use when sourced)
+# add_arg_description "-v, --verbose" "Enable verbose mode"
+# add_arg_description "-f" "Enable feature F"
+# add_arg_description "--val VALUE" "Set the value to VALUE"
+
+# When sourcing, use like this in your scripts:
+# . /path/to/arg_parser.sh
+# add_arg_description "-v, --verbose" "Enable verbose mode"
+# add_arg_description "-f" "Enable feature F"
+# add_arg_description "--val VALUE" "Set the value to VALUE"
+# parse_args "$@"
+# value=$(get_arg val)
