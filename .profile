@@ -31,11 +31,24 @@ fi
 # add my custom scripts file to path
 if [ -d "$HOME/repos/shcripts" ]; then
    PATH="$HOME/repos/shcripts:$PATH"
+   PATH="$HOME/repos/shcripts/utils:$PATH"
+   PATH="$HOME/repos/shcripts/sound:$PATH"
+   PATH="$HOME/repos/shcripts/screen:$PATH"
+   PATH="$HOME/repos/shcripts/bluetooth:$PATH"
+   PATH="$HOME/repos/shcripts/_torrentor/bin:$PATH"
+   PATH="$HOME/repos/shcripts/browserinfo/bin:$PATH"
+   PATH="$HOME/repos/shcripts/wifi:$PATH"
+   PATH="$HOME/repos/shcripts/dev:$PATH"
 fi
 
 #alias pls="sudo "
 
+export SHELL=/usr/bin/zsh
 export EDITOR=/usr/bin/vim
 export SUDO_ASKPASS=$HOME/repos/shcripts/askpass
+export TERM=st
+export NNN_FIFO=/tmp/nnn.fifo
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/Downloads/kafka_2.13-3.3.1/bin
 
 pgrep i3 || startx

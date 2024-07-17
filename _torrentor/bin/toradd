@@ -8,7 +8,7 @@ if [ "$link" = "" ]; then
 fi
 
 dir=$(dirname -- "$0")
-sidfile=$(echo "$dir/_torrentor/cookie")
+sidfile=$(echo "$dir/../cookie")
 
 addedTor=""
 

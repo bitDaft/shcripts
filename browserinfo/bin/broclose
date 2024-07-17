@@ -4,7 +4,7 @@
 dir=$(dirname -- "$0")
 sessionPath="/home/tausif/custombro/custombro/Sessions"
 
-tabGroups=$(ls -1 "$dir/browserinfo/tabs" | sort)
+tabGroups=$(ls -1 "$dir/../tabs" | sort)
 
 tabList="$1"
 query=""
@@ -24,10 +24,10 @@ fi
 
 queryF=""
 if [ "$tabList" = "!current" ]; then
-  tabList=$(cat "$dir/browserinfo/brocurrenttabgroup")
-  queryF=$(cat "$dir/browserinfo/brocurrenttabline")
+  tabList=$(cat "$dir/../brocurrenttabgroup")
+  queryF=$(cat "$dir/../brocurrenttabline")
 else
-  list=$(cat "$dir/browserinfo/tabs/$tabList")
+  list=$(cat "$dir/../tabs/$tabList")
   queryF=$(echo "back\n$list" | dmenu -i -l 20 -p "close tab")
 fi
 
@@ -35,10 +35,10 @@ fi
 [ "$queryF" = "back" ] && broclose && exit 0
 
 if [ ! "$currentOpenTabId" = "" ]; then
-  currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
+  currentTabline=$(cat "$dir/../brocurrenttabline")
 
   if [ "$queryF" = "$currentTabline" ]; then 
-    echo "" | tee "$dir/browserinfo/brocurrenttabline"
+    echo "" | tee "$dir/../brocurrenttabline"
     DISPLAY=:0 wmctrl -ic "$currentOpenTabId"
     rm -r "$sessionPath"
     mkdir -p "$sessionPath"
@@ -46,9 +46,9 @@ if [ ! "$currentOpenTabId" = "" ]; then
 fi
 currentTablineUrl=$(echo "$queryF" | grep -iPo "{\K.*?(?=}$)")
 
-delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$tabList" | grep -ioP "^\d+(?=:)")
+delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/../tabs/$tabList" | grep -ioP "^\d+(?=:)")
 if [ ! "$delLineNumber" = "" ]; then
-  sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$tabList"
+  sed -i -e "${delLineNumber}d" "$dir/../tabs/$tabList"
 fi
 
 broclose "$tabList"

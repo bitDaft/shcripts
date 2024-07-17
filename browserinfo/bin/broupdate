@@ -17,26 +17,26 @@ sessionFileName=$(ls -1 "$sessionPath" | grep -i "^Session_")
 currentTabUrl=$(chrome-session-dump "$sessionPath/$sessionFileName" | head -n 1)
 newTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
 
-currentTabGroupName=$(cat "$dir/browserinfo/brocurrenttabgroup")
-currentTabline=$(cat "$dir/browserinfo/brocurrenttabline")
+currentTabGroupName=$(cat "$dir/../brocurrenttabgroup")
+currentTabline=$(cat "$dir/../brocurrenttabline")
 currentTablineUrl=$(echo "$currentTabline" | grep -iPo "{\K.*?(?=}$)")
 
-delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/browserinfo/tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
-fileLineCount=$(cat "$dir/browserinfo/tabs/$currentTabGroupName" | wc -l)
+delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/../tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
+fileLineCount=$(cat "$dir/../tabs/$currentTabGroupName" | wc -l)
 
-echo "$newTabLine" | tee "$dir/browserinfo/brocurrenttabline"
+echo "$newTabLine" | tee "$dir/../brocurrenttabline"
 if [ ! "$delLineNumber" = "" ]; then
-  sed -i "${delLineNumber}a ${newTabLine}\\" "$dir/browserinfo/tabs/$currentTabGroupName"
-  sed -i -e "${delLineNumber}d" "$dir/browserinfo/tabs/$currentTabGroupName"
+  sed -i "${delLineNumber}a ${newTabLine}\\" "$dir/../tabs/$currentTabGroupName"
+  sed -i -e "${delLineNumber}d" "$dir/../tabs/$currentTabGroupName"
 elif [ $fileLineCount -eq 0 ]; then
-  echo "$newTabLine" > "$dir/browserinfo/tabs/$currentTabGroupName"
+  echo "$newTabLine" > "$dir/../tabs/$currentTabGroupName"
 else
-  sed -i "1i ${newTabLine}\\" "$dir/browserinfo/tabs/$currentTabGroupName"
+  sed -i "1i ${newTabLine}\\" "$dir/../tabs/$currentTabGroupName"
 fi
 
-files=$(sort -u "$dir/browserinfo/tabs/$currentTabGroupName" | grep -v "^{}$")
+files=$(sort -u "$dir/../tabs/$currentTabGroupName" | grep -v "^{}$")
 
-echo "$files" | tee "$dir/browserinfo/tabs/$currentTabGroupName"
+echo "$files" | tee "$dir/../tabs/$currentTabGroupName"
 
 exit 0
 

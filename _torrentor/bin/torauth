@@ -2,7 +2,7 @@
 #torauth
 
 dir=$(dirname -- "$0")
-sidfile=$(echo "$dir/_torrentor/cookie")
+sidfile=$(echo "$dir/../cookie")
 
 username="admin"
 password="password"

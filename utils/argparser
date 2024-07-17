@@ -2,10 +2,11 @@
 #argparser
 # Function to store argument descriptions
 arg_descriptions=""
+extra_usage=""
+non_opt_args=""
 
 # Function to parse arguments
 parse_args() {
-    non_opt_args=""
     while [ "$#" -gt 0 ]; do
         case "$1" in
             -h|--help)
@@ -64,7 +65,13 @@ set_arg() {
 # Function to get argument values
 get_arg() {
     arg_name="$1"
+    check=$(eval "echo \${arg_$arg_name}")
+    [ "$check" = "" ] && return 1
     eval "echo \${arg_$arg_name}"
+}
+
+get_nonopt_arg() {
+    eval "echo \${non_opt_args}"
 }
 
 # Function to add argument descriptions
@@ -74,9 +81,13 @@ add_arg_description() {
     arg_descriptions="${arg_descriptions}\\n${arg_name}: ${arg_description}"
 }
 
+add_extra_usage() {
+    extra_usage="$1"
+}
+
 # Function to display usage information
 display_usage() {
-    echo "Usage: $0 [OPTIONS] [ARGUMENTS]"
+    echo "Usage: $0 [OPTIONS] $extra_usage"
     echo "Options:"
     echo "$arg_descriptions"
 }

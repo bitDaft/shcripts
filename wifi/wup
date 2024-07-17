@@ -1,0 +1,77 @@
+#!/usr/bin/env sh
+#wup
+
+WPA_SUPPLICANT_CONF="/etc/wpa_supplicant.conf"
+
+send_notification() {
+    message="$1"
+    summary="$2"
+    sendnotification --summary "$summary" "$message"
+}
+
+turn_on_wifi() {
+    if ! sudo ip link set "$interface" up; then
+        send_notification "Failed to turn on Wi-Fi interface." "Error"
+        exit 1
+    fi
+    send_notification "Wi-Fi interface turned on." "Info"
+}
+
+check_connection() {
+    current_network=$(sudo iwgetid -r "$interface")
+    if [ -n "$current_network" ]; then
+        send_notification "Already connected to $current_network." "Info"
+        return 0
+    else
+        return 1
+    fi
+}
+
+make_connection() {
+    if sudo wpa_supplicant -B -iwlp8s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext > /dev/null 2>&1; then
+        send_notification "Successfully connected." "Success"
+				sleep 6
+        return 0
+    else
+        return 1
+    fi
+}
+
+lease_ip() {
+    if sudo dhclient "$interface" -nw; then
+        send_notification "Successfully leased IP address." "Success"
+    else
+        send_notification "Failed to lease IP address." "Error"
+        exit 1
+    fi
+}
+
+interface=$(ip a | grep -iP "^\d: " | grep -P "state (UP|DOWN)" | grep "UP>" | grep "qlen" | grep -iPo "\d: \K\w+(?=:)")
+if [ -z "$interface" ]; then
+    send_notification "No wireless interface found." "Error"
+    exit 1
+fi
+
+turn_on_wifi
+check_connection && exec wconnect
+
+if grep -q 'network={' "$WPA_SUPPLICANT_CONF"; then
+		make_connection
+		lease_ip
+		exit 0
+elif [ ! "$1" = "n" ]; then
+	exec wconnect
+fi
+
+# sudo ip link set wlp8s0 up
+# sudo iwgetid -r wlp8s0 -c >/dev/null && exec wconnect
+# count=$(wc -l /etc/wpa_supplicant.conf | awk '{print $1}')
+# [ "$count" -eq 5 ] && sudo wpa_supplicant -B -iwlp8s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext && sleep 7
+# if [ "$count" -eq 5 ] && sudo iwgetid -r wlp8s0 -c; then
+# 	sudo dhclient -nw wlp8s0
+# 	exit 0
+# elif [ ! "$1" = "n" ]; then
+# 	exec wconnect
+# else
+# 	exit 1
+# fi

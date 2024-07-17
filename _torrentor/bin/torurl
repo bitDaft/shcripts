@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+#torurl
+
+dir=$(dirname -- "$0")
+
+selectedSite=$(ls "$dir/../sites" | dmenu -p "select torrent site" -i -l 20)
+newUrl=$(cat "$dir/../sites/$selectedSite/urls" | grep -iv "^D:.*$" | dmenu -p "select default url" -l 20)
+echo $newUrl
+sed -i '$d' "$dir/../sites/$selectedSite/urls"
+echo "D:$newUrl" | tee -a "$dir/../sites/$selectedSite/urls"
+

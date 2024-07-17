@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+#brochgroup
+
+dir=$(dirname -- "$0")
+
+tabGroups=$(ls -1 "$dir/../tabs" | sort)
+
+tabList=""
+
+tabList=$(echo "${tabGroups}" | dmenu -i -l 20 -p "select new tab group")
+[ "$tabList" = "" ] && exit 0
+
+broupdate
+
+currentTabGroupName=$(cat "$dir/../brocurrenttabgroup")
+currentTabline=$(cat "$dir/../brocurrenttabline")
+currentTablineUrl=$(echo "$currentTabline" | grep -iPo "{\K.*?(?=}$)")
+
+delLineNumber=$(grep -ion "$currentTablineUrl" "$dir/../tabs/$currentTabGroupName" | grep -ioP "^\d+(?=:)")
+if [ ! "$delLineNumber" = "" ]; then
+  sed -i -e "${delLineNumber}d" "$dir/../tabs/$currentTabGroupName"
+fi
+
+touch "$dir/../tabs/$tabList"
+
+echo "$currentTabline" >> "$dir/../tabs/$tabList"
+files=$(sort -u "$dir/../tabs/$tabList" | grep -v "^{}$")
+echo "$files" | tee "$dir/../tabs/$tabList"
+echo "$tabList" | tee "$dir/../brocurrenttabgroup"
+
+
+
+

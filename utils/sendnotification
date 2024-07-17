@@ -1,0 +1,76 @@
+#!/usr/bin/env sh
+#sendnotification
+
+. argparser
+
+# Default values for optional arguments
+default_app_name="your-application-name"
+default_notification_id=0
+default_icon=""
+default_timeout=5000
+default_summary="Default Title"
+body=""
+default_urgency=0
+
+# Function to send a notification using D-Bus
+send_notification() {
+    summary="$1"
+    body="$2"
+
+    gdbus call --session --dest org.freedesktop.Notifications \
+              --object-path /org/freedesktop/Notifications \
+              --method org.freedesktop.Notifications.Notify \
+              "$app_name" \
+              "$notification_id" \
+              "$icon" \
+              "$summary" \
+              "$body" \
+              "[]" \
+              "{\"urgency\": <byte $urgency>}" \
+              "$timeout" > /dev/null 
+}
+
+# Add argument descriptions
+add_arg_description "-u, --urgency 0, 1, 2" "Set the urgency"
+add_arg_description "-a, --app-name NAME" "Set the application name"
+add_arg_description "-n, --notification-id ID" "Set the notification ID"
+add_arg_description "-i, --icon ICON" "Set the notification icon"
+add_arg_description "-t, --timeout TIMEOUT" "Set the notification timeout in milliseconds"
+add_arg_description "-s, --summary SUMMARY" "Set the notification title (summary)"
+add_arg_description "-h, --help" "Display this help message"
+
+# Add extra usage line
+add_extra_usage "<body>"
+
+# Check if notify-send is available
+if ! command -v notify-send > /dev/null 2>&1; then
+    echo "notify-send not found. Please install libnotify-bin."
+    exit 1
+fi
+
+# Parse arguments
+parse_args "$@"
+
+# Set optional arguments, checking both short and long versions
+urgency=$(get_arg u || get_arg urgency || echo "$default_urgency")
+app_name=$(get_arg a || get_arg app_name || echo "$default_app_name")
+notification_id=$(get_arg n || get_arg notification_id || echo "$default_notification_id")
+icon=$(get_arg i || get_arg icon || echo "$default_icon")
+timeout=$(get_arg t || get_arg timeout || echo "$default_timeout")
+summary=$(get_arg s || get_arg summary || echo "$default_summary")
+
+# Get non-option arguments
+non_opt_args=$(get_nonopt_arg)
+
+# Check remaining arguments for body
+if [ -z "$non_opt_args" ]; then
+    display_usage
+    exit 1
+else
+    body="$non_opt_args"
+fi
+
+# Send notification
+send_notification "$summary" "$body"
+
+exit 0

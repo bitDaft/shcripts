@@ -10,7 +10,7 @@ if [ "$url" = "" ]; then
   exit 1 
 fi
 
-browser=$(cat "$dir/browserinfo/brobin")
+browser=$(cat "$dir/../brobin")
 
 $browser --extensions-in-action-box --enable-profile-shortcut-manager --enable-extensions --disable-restore-session-state --new-window --profile-directory="custombro" --user-data-dir="custombro" --class="custom-bro" --kiosk  "$1" &
 

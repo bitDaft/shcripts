@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+#wscan
+
+# Function to send a notification using the send_notification script
+send_notification() {
+    message="$1"
+    summary="$2"
+    sendnotification --summary "$summary" "$message"
+}
+
+# Get the interface name
+interface=$(ip a | grep -iP "^\d: " | grep -P "state (UP|DOWN)" | grep "UP>" | grep "qlen" | grep -iPo "\d: \K\w+(?=:)")
+if [ -z "$interface" ]; then
+    send_notification "No wireless interface found." "Error"
+    exit 1
+fi
+
+# Scan for Wi-Fi networks
+networks=$(sudo iwlist wlp8s0 scanning | awk -F: '/^          Cell/ { printf("\n"); } /Frequency/ { freq=$2; } /ESSID/ { essid=$2; gsub(/"/,"",essid); print "[" freq "] " essid; }' | sed '/^$/d')
+
+if [ -z "$networks" ]; then
+    send_notification "No Wi-Fi networks found. Retrying..." "Error"
+		sleep 2
+		exec wscan
+    exit 1
+fi
+
+# Return the list of networks
+echo "$networks"
+
+exit 0
+
+
+
+
+# output=$(sudo iwlist wlp8s0 scan)
+# if [ "$output" = "" ]; then
+# 	# wdown > /dev/null
+# 	sleep 2
+# 	exec wscan
+# 	exit 1
+# else
+# 	echo "$output" | grep -Pio "(?<=ESSID\:\")\K.+(?=\")"
+# 	exit 0
+# fi

@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+#torsearch
+
+dir=$(dirname -- "$0")
+
+selectedSite=$(ls "$dir/../sites" | dmenu -p "select torrent site" -i -l 20)
+searchText=$(echo "" | dmenu -p "search torrents")
+categoryCode=$(cat "$dir/../sites/$selectedSite/category" | dmenu -p "select category" -i -l 20 | grep -iPo "^[^|]*")
+siteUrl=$(cat "$dir/../sites/$selectedSite/urls" | grep -iPo "D:\K.*$")
+
+echo $siteUrl
+
+outputLines=$($dir/../sites/$selectedSite/search "$searchText" "$categoryCode" "$siteUrl")
+
+torrentHash=$(echo "$outputLines" | dmenu -p "choose torrent" -l 20 -i | grep -o '[^ ]*$')
+
+echo "magnet:?xt=urn:btih:$torrentHash"

@@ -12,7 +12,7 @@ av="$1"
 [ "$av" = "" ] && exit 1
 echo "av = $av"
 
-tabUrl=$(cat "$dir/browserinfo/brocurrenttabline" | grep -iPo "{\K.*?(?=}$)" )
+tabUrl=$(cat "$dir/../brocurrenttabline" | grep -iPo "{\K.*?(?=}$)" )
 echo "url : $tabUrl"
 valid=$(echo "$tabUrl" | grep -i "watch")
 [ "$valid" = "" ] && exit 1

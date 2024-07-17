@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+#wdown
+
+# Function to send a notification using the send_notification script
+send_notification() {
+    message="$1"
+    summary="$2"
+    sendnotification --summary "$summary" "$message"
+}
+
+interface=$(ip a | grep -iP "^\d: " | grep -P "state (UP|DOWN)" | grep "UP>" | grep "qlen" | grep -iPo "\d: \K\w+(?=:)")
+
+# Disconnect from Wi-Fi
+if sudo pkill wpa_supplicant > /dev/null 2>&1; then
+    echo "" | sudo tee /etc/wpa_supplicant.conf
+    send_notification "Successfully disconnected from Wi-Fi." "Success"
+    sudo dhclient -r -6 "$interface"
+    sudo dhclient -r "$interface" 
+else
+    send_notification "Failed to disconnect from Wi-Fi." "Error"
+    exit 1
+fi
+
+# Release the IP address
+
+sleep 5
+exit 0

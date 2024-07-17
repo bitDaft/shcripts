@@ -4,7 +4,7 @@
 dir=$(dirname -- "$0")
 sessionPath="/home/tausif/custombro/custombro/Sessions"
 
-tabGroups=$(ls -1 "$dir/browserinfo/tabs" | sort)
+tabGroups=$(ls -1 "$dir/../tabs" | sort)
 
 tabList="$1"
 query=""
@@ -12,7 +12,7 @@ query=""
 if [ "$tabList" = "" ]; then
   tabList=$(echo "All\n${tabGroups}" | dmenu -i -l 20 -p "select tab group")
 elif [ "$tabList" = "ctabg" ]; then
-  tabList=$(cat "$dir/browserinfo/brocurrenttabgroup")
+  tabList=$(cat "$dir/../brocurrenttabgroup")
 elif [ "$tabList" = "new" ]; then
   query=$(echo "" | dmenu -i -p "enter url or search")
 fi
@@ -21,9 +21,9 @@ fi
 
 queryF=""
 if [ "$tabList" = "All" ]; then
-  queryF=$(cat "$dir/browserinfo/tabs/*" | dmenu -i -l 20 -p "select tab" )
+  queryF=$(cat "$dir/../tabs/*" | dmenu -i -l 20 -p "select tab" )
 elif [ ! "$tabList" = "new" ]; then
-  queryF=$(cat "$dir/browserinfo/tabs/$tabList" | dmenu -i -l 20 -p "select tab")
+  queryF=$(cat "$dir/../tabs/$tabList" | dmenu -i -l 20 -p "select tab")
 fi
 
 [ ! "$tabList" = "new" ] && [ "$queryF" = "" ] && exit 0
@@ -34,8 +34,8 @@ currentOpenTabId=$(echo "$currentTabLineX" | grep -iPo "\b0x\w+")
 
 if [ ! "$currentOpenTabId" = "" ]; then
   broupdate
-  echo "" | tee "$dir/browserinfo/brocurrenttabgroup"
-  echo "" | tee "$dir/browserinfo/brocurrenttabline"
+  echo "" | tee "$dir/../brocurrenttabgroup"
+  echo "" | tee "$dir/../brocurrenttabline"
   # close the existing tab
   DISPLAY=:0 wmctrl -ic "$currentOpenTabId"
   sleep 1
@@ -52,7 +52,7 @@ else
   query=$(echo "$queryF" | grep -iPo "{\K.*?(?=}$)")
 fi
 
-echo "$tabList" | tee "$dir/browserinfo/brocurrenttabgroup"
+echo "$tabList" | tee "$dir/../brocurrenttabgroup"
 # open new tab
 broopen "$query"
 sleep 3
@@ -64,15 +64,15 @@ currentTabUrl=$(chrome-session-dump "$sessionPath/$sessionFileName" | head -n 1)
 curNewTabLine=$(echo "${currentOpenTabName}{${currentTabUrl}}")
 
 if [ "$exists" = "0" ]; then
-  echo "$curNewTabLine" | tee "$dir/browserinfo/brocurrenttabline"
-  fileLineCount=$(cat "$dir/browserinfo/tabs/$currentTabGroupName" | wc -l)
+  echo "$curNewTabLine" | tee "$dir/../brocurrenttabline"
+  fileLineCount=$(cat "$dir/../tabs/$currentTabGroupName" | wc -l)
   if [ $fileLineCount -eq 0 ]; then
-    echo "$curNewTabLine" > "$dir/browserinfo/tabs/$currentTabGroupName"
+    echo "$curNewTabLine" > "$dir/../tabs/$currentTabGroupName"
   else
-    sed -i "1i ${curNewTabLine}\\" "$dir/browserinfo/tabs/$currentTabGroupName"
+    sed -i "1i ${curNewTabLine}\\" "$dir/../tabs/$currentTabGroupName"
   fi
 else
-  echo "$queryF" | tee "$dir/browserinfo/brocurrenttabline"
+  echo "$queryF" | tee "$dir/../brocurrenttabline"
 fi
 broupdate
 

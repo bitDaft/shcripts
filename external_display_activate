@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-sleep 3 
-if xrandr -q | grep -i " connected" | grep -i "virtual"; then
-	xrandr --output VIRTUAL2 --off --output VIRTUAL1 --auto --pos 0x0 --rotate normal --output eDP1 --primary --mode 1920x1080 --pos 1920x1080 --rotate normal
-fi
