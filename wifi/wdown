@@ -21,7 +21,5 @@ else
     exit 1
 fi
 
-# Release the IP address
-
 sleep 5
 exit 0

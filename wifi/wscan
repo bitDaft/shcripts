@@ -29,17 +29,3 @@ fi
 echo "$networks"
 
 exit 0
-
-
-
-
-# output=$(sudo iwlist wlp8s0 scan)
-# if [ "$output" = "" ]; then
-# 	# wdown > /dev/null
-# 	sleep 2
-# 	exec wscan
-# 	exit 1
-# else
-# 	echo "$output" | grep -Pio "(?<=ESSID\:\")\K.+(?=\")"
-# 	exit 0
-# fi
