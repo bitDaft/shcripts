@@ -40,5 +40,5 @@ if [ "$is_move" = "1" ]; then
 	move_stmt="move container to "
 fi
 
-new_actual_workspace="${curr_wrkspc}:${curr_group}"
+new_actual_workspace="${curr_group}:${curr_wrkspc}"
 i3-msg "${move_stmt}workspace $new_actual_workspace"
