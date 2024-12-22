@@ -29,8 +29,8 @@ check_connection() {
 
 make_connection() {
     if sudo wpa_supplicant -B -iwlp8s0 -c /etc/wpa_supplicant.conf -Dnl80211,wext > /dev/null 2>&1; then
+		sleep 7
         send_notification "Successfully connected." "Success"
-				sleep 6
         return 0
     else
         return 1
@@ -39,6 +39,7 @@ make_connection() {
 
 lease_ip() {
     if sudo dhclient "$interface" -nw; then
+        sleep 5
         send_notification "Successfully leased IP address." "Success"
     else
         send_notification "Failed to lease IP address." "Error"
@@ -46,7 +47,8 @@ lease_ip() {
     fi
 }
 
-interface=$(ip a | grep -iP "^\d: " | grep -P "state (UP|DOWN)" | grep "UP>" | grep "qlen" | grep -iPo "\d: \K\w+(?=:)")
+dir=$(dirname -- "$0")
+interface=$(cat "$dir/interface.conf")
 if [ -z "$interface" ]; then
     send_notification "No wireless interface found." "Error"
     exit 1
@@ -58,7 +60,8 @@ check_connection && exec wconnect
 if grep -q 'network={' "$WPA_SUPPLICANT_CONF"; then
 		make_connection
 		lease_ip
-		exit 0
+        ping -w 2 8.8.8.8
 elif [ ! "$1" = "n" ]; then
 	exec wconnect
 fi
+exit 0

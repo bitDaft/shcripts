@@ -8,7 +8,8 @@ send_notification() {
     sendnotification --summary "$summary" "$message"
 }
 
-interface=$(ip a | grep -iP "^\d: " | grep -P "state (UP|DOWN)" | grep "UP>" | grep "qlen" | grep -iPo "\d: \K\w+(?=:)")
+dir=$(dirname -- "$0")
+interface=$(cat "$dir/interface.conf")
 
 # Disconnect from Wi-Fi
 if sudo pkill wpa_supplicant > /dev/null 2>&1; then

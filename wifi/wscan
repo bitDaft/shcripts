@@ -9,7 +9,8 @@ send_notification() {
 }
 
 # Get the interface name
-interface=$(ip a | grep -iP "^\d: " | grep -P "state (UP|DOWN)" | grep "UP>" | grep "qlen" | grep -iPo "\d: \K\w+(?=:)")
+dir=$(dirname -- "$0")
+interface=$(cat "$dir/interface.conf")
 if [ -z "$interface" ]; then
     send_notification "No wireless interface found." "Error"
     exit 1

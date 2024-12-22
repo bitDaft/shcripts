@@ -12,10 +12,16 @@ count=$1
 count=$((count+1))
 
 echo "device: $currentDevice"
-btdiscon
-sleep 2
+bluetoothctl info && btdiscon
 echo "trying to connect to : $currentDevice"
-btconnect "$currentDevice" && echo "Successfully connected" && exit 0
+
+check=$(btconnect "$currentDevice")
+
+if [ "$check" = "0" ]; then
+  echo "Successfully connected"
+  exit 0
+fi
+
 echo "retrying for $currentDevice $count..."
 btrecon $count 
 
