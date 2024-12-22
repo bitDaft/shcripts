@@ -2,34 +2,43 @@
 #
 # $1 workspace
 # $2 group
-# $3 move to modifier
+# $3 move to 
+
+if [ "$#" -lt 1 ] ; then
+	echo "No workspace given"
+	exit 1
+fi
+
 group_file="/tmp/_i3wrkspc_group_curr"
+wrkspc_file="/tmp/_i3wrkspc_curr"
 
 if [ ! -f $group_file ]; then
 	touch $group_file
 	echo "0" > $group_file
 fi
+if [ ! -f $wrkspc_file ]; then
+	touch $wrkspc_file
+	echo "0" > $wrkspc_file
+fi
 
 curr_group=$(cat $group_file)
+curr_wrkspc=$(cat $wrkspc_file)
 new_wrkspc="$1"
 new_grp="$2"
 is_move="$3"
 move_stmt=""
 
-if [ "$new_wrkspc" = "" ]; then
-	echo "No new workspace given"
-	exit 1
+if [ ! "$new_wrkspc" = "-1" ]; then
+	curr_wrkspc=$new_wrkspc
+	echo "$new_wrkspc" > $wrkspc_file
 fi
-
+if [ ! "$new_grp" = "" ] && [ ! "$new_grp" = "-1" ]; then
+	curr_group=$new_grp
+	[ "$is_move" = "1" ] || echo "$new_grp" > $group_file
+fi
 if [ "$is_move" = "1" ]; then
 	move_stmt="move container to "
 fi
 
-if [ ! "$new_grp" = "" ] && [ ! "$new_grp" = "-1" ]; then
-	curr_group=$new_grp
-	echo "$new_grp" > $group_file
-fi
-
-new_actual_workspace="${new_wrkspc}/${curr_group}"
-
+new_actual_workspace="${curr_wrkspc}:${curr_group}"
 i3-msg "${move_stmt}workspace $new_actual_workspace"
